@@ -1,13 +1,17 @@
 import express from 'express'
-import TravelService from '../services/travelService.js'
+import { createTravelService } from '../services/travelService.js'
 import { createStreamResponse } from '../utils/streamUtils.js'
 
+// 创建路由
 const router = express.Router()
+const TravelService = createTravelService()
 
+// 推荐接口
 router.post('/recommend', async (req, res) => {
   const { city, budget, days } = req.body
 
   if (!city || !budget || !days) {
+    // 缺少必填字段
     return res.status(400).json({ error: 'Missing required fields' })
   }
   const result = await TravelService.recommend(city, budget, days)
@@ -15,6 +19,7 @@ router.post('/recommend', async (req, res) => {
   return res.json(result)
 })
 
+// 聊天接口
 router.post('/chat', async (req, res) => {
   const { message } = req.body
   if (!message) {
